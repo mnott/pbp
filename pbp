@@ -1,0 +1,60 @@
+#!/usr/bin/perl -w
+#
+# Welcome to PBP (Pretty Bad Privacy).
+#
+# This is a very stupid and small script that you can use
+# to permanently decrypt mails that you have received PGP
+# encrypted, on Mac OSX, in Apple Mail. See the README.md
+# for how to use it.
+# 
+# (c) 2015, Matthias Nott (mnott@mnsoft.org)
+
+use MIME::Base64 qw(decode_base64);
+
+my $status = 0;
+my $header = "";
+my $body   = "";
+
+# Parse Mail
+while (<>) {
+	if($status == 0) {
+	  if(/^Content-Type: multipart\/mixed;.*/) {
+	  	$status = 1;    # waiting for encrypted.asc
+	  } else {
+	  	$header .= $_;	# waiting for end of header
+	  }
+	} elsif($status == 1) {
+		if (/^Content-Type: application\/octet-stream; name="encrypted.asc".*/) {
+			$status = 2; # waiting for body
+		}
+	} elsif($status == 2) { 
+		if (/^\r$/) {
+			$status = 3; # collecting body
+		}
+	} elsif($status == 3) {
+		if (/^\r$/) {
+			$status = 4; # end of body
+		} else {
+			$body .= $_; # keep collecting body
+		}
+	}
+}
+
+# Decode Body
+$body = decode_base64($body);
+
+# Write decoded attachment to export file
+open OUT, ">encrypted.asc" or die "Could not write to encrpyted.asc: $!\n";
+print OUT $body;
+close OUT;
+
+# Write headers to target file
+open OUT, ">decrypted.eml"  or die "Could not write to decrpyted.asc: $!\n";
+print OUT $header;
+close OUT;
+
+# Call gpg and decrypt export file to target file
+system("gpg2 -d encrypted.asc >> decrypted.eml");
+
+# Clean up
+unlink "encrypted.asc";
