@@ -57,9 +57,9 @@ So as you receive a mail that you want to permanently decrypt, do the following 
 Optimizations
 ---------
 
-Many things can be done to make this script better:
+Many things can be done to make this script better: For example,
 
-1. For example, it has many things hard coded, for example, not only the file names,
-2. but also the header strings by which it finds out at which point it wants to stop collecting headers (status 1), at which point it has found the beginning of the attachment that contains the encrypted part of the mail (status 2), at which that attachment's content actually starts (status 3) and ends (status 4).
+1. it has many things hard coded, for example, not only the file names,
+2. but also the header strings by which it finds out at which point it wants to stop collecting headers (status 1), at which point it has found the beginning of the attachment that contains the encrypted part of the mail (status 2), at which point that attachment's content actually starts (status 3) and ends (status 4).
 3. Also, you could think about embedding this into Apple Mail by some scripting foo. But then it would probably be best to actually just include the same logic into GPGMail in the first place. As you can read elsewhere, this has been one of the first requirements on the GPGMail list, but apparently has never been implemented.
 
