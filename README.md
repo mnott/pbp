@@ -18,12 +18,7 @@ Copy the pbp file into some directory that is in your path. Also, make sure you 
 
 1. Perl with MIME::Base64: You should have that anyway.
 2. GPG Tools (<http://gpgtools.org>): Otherwise you would probably not be using this script in the first place...
-3. Mac Ports (<http://macports.org>): Because of the following:
-4. MPack: To extract the attachment. Install it using:
 
-```
-# sudo port install mpack
-```
 
 Usage
 ---------
